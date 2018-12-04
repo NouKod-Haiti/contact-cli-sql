@@ -12,7 +12,7 @@ A contact should be defined at least with this:
 - phone number
 - addres
 - email
--
+- ...
 
 ## Requirements
 1. The App should be Object Oriented Programing (OOP) instead of Procedural
