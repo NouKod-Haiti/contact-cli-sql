@@ -10,8 +10,9 @@ The CLI Contact App is an app that allows you to:
 A contact should be defined at least with this:
 - name
 - phone number
-- address
+- addres
 - email
+-
 
 ## Requirements
 1. The App should be Object Oriented Programing (OOP) instead of Procedural
