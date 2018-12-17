@@ -69,12 +69,7 @@ class Contact
     end
 
     
-def save
-    sql = <<-SQL
-     INSERT INTO contacts(first_name,last_name,person_address,email,phone) VALUES(?,?,?,?,?)
-    SQL
-    DB[:conn].execute(sql,self.first_name, self.last_name,self.person_address,self.email,self.phone)
-end
+
 
 
 end
