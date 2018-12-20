@@ -9,7 +9,7 @@ class MenuController
 
   def run
     puts " "
-    puts "Main Menu - #{Contact.all.count} contacts"
+    puts "Main Menu - #{Contact.all.count} contacts".upcase.blue
     puts " "
     puts "1 - Add a contact"
     puts "2 - Display all contacts"
@@ -169,7 +169,7 @@ def edit_contact(contact)
 #  end
  puts "Contact Created successfull!"
 def find_match(name) 
-    @address_book.search(name)
+    Contact.search(name)
   end
 
   def search_contacts
@@ -196,7 +196,7 @@ def find_match(name)
     end
 
     begin
-      @address_book.add_from_csv(file_name)
+      Contact.add_from_csv(file_name)
     rescue
       $stdout.print "#{file_name} is not a valid CSV file, please enter the name of a valid CSV file"
       read_csv
