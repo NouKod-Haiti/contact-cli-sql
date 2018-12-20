@@ -1,4 +1,4 @@
-require_relative "../lib/address_book"
+# require_relative "../lib/address_book"
 
 class MenuController
   attr_accessor :address_book
@@ -9,7 +9,7 @@ class MenuController
 
   def run
     puts " "
-    puts "Main Menu - #{@address_book.contacts.count} contacts"
+    puts "Main Menu - #{Contact.all.count} contacts"
     puts " "
     puts "1 - Add a contact"
     puts "2 - Display all contacts"
@@ -23,8 +23,8 @@ class MenuController
 
     case selection
     when 1
-      add_contact
-      run
+        add_contact
+        run
     when 2
       display_all_contacts
       run
@@ -108,10 +108,10 @@ class MenuController
   def display_all_contacts
     system "clear"
 
-    @address_book.contacts.each_with_index do |contact, index|
+    Contact.all.each_with_index do |contact, index|
       system "clear"
       puts "Contact #{index + 1}"
-      puts contact.to_s
+      puts contact.name
       contacts_submenu(contact)
     end
 
@@ -154,7 +154,7 @@ def edit_contact(contact)
     print "Email: "
     email = $stdin.gets.chomp
 
-    @address_book.add_contact(name, phone, address, email)
+    Contact.create(name: name, phone: phone, address: address, email: email)
 
     system "clear"
     puts "New contact added"
@@ -175,10 +175,10 @@ def find_match(name)
   def search_contacts
     print "Search by name: "
     name = $stdin.gets.chomp
-    match = find_match(name)
+    match = Contact.find_by_name(name)
 
     if match
-      $stdout.print match.to_s 
+      $stdout.print match.name 
       search_submenu(match)
     else
       $stdout.print "No match found\n"
