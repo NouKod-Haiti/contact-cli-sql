@@ -9,6 +9,6 @@ class Main
     end
   
     def to_s
-      "\nName: #{@name}\nPhone: #{@phone}\nAddress: #{@address}\nEmail: #{@email}"
+      "\nName: #{@name}\nPhone Number: #{@phone_number}\nAddress: #{@address}\nEmail: #{@email}"
     end
   end
