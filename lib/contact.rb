@@ -1,12 +1,12 @@
 
 class Contact
 
-    attr_accessor :name, :phone_number, :address, :email
+    attr_accessor :name, :phone, :address, :email
     attr_reader :id
 
     # Initializing the attributes 
-    def initialize(id=nil, name, phone_number, address, email)
-      @email, @phone_number, @address, @name, @id = email, phone_number, address, name, id
+    def initialize(id=nil, name, phone, address, email)
+      @email, @phone, @address, @name, @id = email, phone, address, name, id
     end
     
     # Creates a contacts table 
@@ -15,7 +15,7 @@ class Contact
         CREATE TABLE IF NOT EXISTS contacts (
             id INTEGER PRIMARY KEY,
             name TEXT,
-            phone_number INTEGER,
+            phone INTEGER,
             address STRING,
             email STRING    
             )
@@ -49,17 +49,17 @@ class Contact
        self.update
      else
        sql = <<-SQL
-         INSERT INTO contacts (name, phone_number, address, email)
+         INSERT INTO contacts (name, phone, address, email)
          VALUES (?, ?, ?, ?)
        SQL
-       DB[:conn].execute(sql, name, phone_number, address, email)
+       DB[:conn].execute(sql, name, phone, address, email)
        @id = DB[:conn].execute("SELECT last_insert_rowid() FROM contacts")[0][0]
      end
     end
 
     #creates new contact and save them
-    def self.create(name:, phone_number:, address:, email:)
-        new_contact = new(name, phone_number, address, email)
+    def self.create(name:, phone:, address:, email:)
+        new_contact = new(name, phone, address, email)
         new_contact.save
         new_contact
     end
@@ -94,14 +94,14 @@ class Contact
     
     # updating the database row mapped to the Contact instance.
     def update
-      sql = "UPDATE contacts SET name = ?, phone_number = ?, address = ?, email = ? WHERE id = ?"
-      DB[:conn].execute(sql, name, phone_number, address, email, id)
+      sql = "UPDATE contacts SET name = ?, phone = ?, address = ?, email = ? WHERE id = ?"
+      DB[:conn].execute(sql, name, phone, address, email, id)
     end
     
     #alter phone number only
-    def self.update_phone_number id, phone_number
-      sql ="UPDATE contacts SET phone_number = ? WHERE id = ?"
-       DB[:conn].execute(sql,phone_number,id)
+    def self.update_phone id, phone
+      sql ="UPDATE contacts SET phone = ? WHERE id = ?"
+       DB[:conn].execute(sql,phone,id)
     end
     
     #alter name only
