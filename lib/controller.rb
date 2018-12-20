@@ -1,267 +1,203 @@
-#require 'pry'
-class Controller
-     
-    def add_contact
-        system('clear')
-        puts "Create a new Contact!\n"
-        puts" "
-        puts "Enter the contact Fullname:"
-        name = gets.chomp
-        until !name.empty? 
-            puts "\nPlease enter a valide name.".red
-            sleep(1)
-            puts "Enter the contact Fullname"
-            name = gets.chomp
+require_relative "../lib/address_book"
 
-        end
+class MenuController
+  attr_accessor :address_book
 
-        puts "Enter an address:"
-        address = gets.chomp
-        until !address.empty?
-            puts "\nPlease enter a valide address.".red
-            sleep(1)
-            puts "Enter an address"
-            address = gets.chomp 
-        end
+  def initialize
+    @address_book = AddressBook.new
+  end
+def run
+    puts " "
+    puts "Main Menu - #{@address_book.contacts.count} contacts"
+    puts " "
+    puts "1 - Add a contact"
+    puts "2 - Display all contacts"
+    puts "3 - Search for a contact"
+    puts "4 - Import contacts from a CSV"
+    puts "5 - Exit"
+    puts " "
+    print "Enter your selection: "
 
-        puts "Enter an e-mail:"
-        email = gets.chomp
-        until !email.empty? 
-            puts "\nPlease enter a valide e-mail.".red
-            sleep(1)
-            puts "Enter an e-mail"
-            email = gets.chomp
-        end
-    
-       
-        puts "Enter a phone Number:"
-        phone_number = gets.chomp
-        until !phone_number.empty? 
-            puts "\nPlease enter a valide phone number.".red
-            sleep(1)
-            puts "Enter a phone Numberr"
-            phone_number = gets.chomp
-        end
+    selection = $stdin.gets.chomp.to_i
 
-         if Contact.create_table == true
-            Contact.create(name:name, phone_number:phone_number, address:address, email:email) 
+    case selection
+    when 1
+      add_contact
+      run
+    when 2
+      display_all_contacts
+      run
+    when 3
+      system "clear"
+      search_contacts
+      run
+    when 4
+      read_csv
+      run
+    when 5
+      puts "Are you sure you want? (yes/no)"
+         input = gets.chomp
+         if input == "n" || input == "N"
+         run
          else
-            Contact.create_table
-            Contact.create(name:name, phone_number:phone_number, address:address, email:email) 
-        end
-       
-       puts "The contact has been created successfully!" 
-    end 
-   
-     def display_all_contacts
-        system("clear") 
-        Contact.all.each do |contact|
-           puts "#{contact.join ", "}\n"
-        end
-    end     
- 
-    def delete_a_contact 
-        display_all_contacts
-        puts "\n Enter the id of the contact you want to delete!"
+      puts "Good-bye!"
+      exit(0)
+      run
+         end
+    else
+      puts "#{selection} is not a valid input"
+      run
+    end
+  end
 
-        input = gets.chomp.to_i
-        Contact.all.each do |contactc|
-             Contact.drop_row input if contactc[0] == input
-        end
-      
-        puts "The contact id #{input} has been deleted!\n"
-        display_all_contacts
-        Menu.new.option
-        
+  def contacts_submenu(contact)
+    puts "\nn - next contact"
+    puts "d - delete contact"
+    puts "e - edit this contact"
+    puts "r - return to main menu"
+
+    selection = $stdin.gets.chomp
+
+    case selection
+    when "n"
+    when "d"
+      delete_contact(contact)
+    when "e"
+      edit_contact(contact)
+      contacts_submenu(contact)
+    when "r"
+      system "clear"
+      run
+    else
+      system "clear"
+      puts "#{selection} is not a valid input"
+      puts contact.to_s
+      contacts_submenu(contact)
+    end
+  end
+
+  def search_submenu(contact)
+    puts "\nd - delete contact"
+    puts "e - edit this contact"
+    puts "r - return to main menu"
+
+    selection = $stdin.gets.chomp
+
+    case selection
+    when "d"
+      system "clear"
+      delete_contact(contact)
+      run
+    when "e"
+      edit_contact(contact)
+      system "clear"
+      puts "Updated Contact"
+      run
+    when ""
+      system "clear"
+      run
+    else
+      system "clear"
+      puts "#{selection} is not a valid input"
+      puts contact.to_s
+      search_submenu(contact)
+    end
+  end
+
+  def display_all_contacts
+    system "clear"
+
+    @address_book.contacts.each_with_index do |contact, index|
+      system "clear"
+      puts "Contact #{index + 1}"
+      puts contact.to_s
+      contacts_submenu(contact)
     end
 
-    def exit
-        puts "Do you really want to exit the program? yes or no".red
-        input = gets.chomp
-        if input =='y' || input =='yes'
-             Contact.drop_table
-             puts "Bye!"
-             system('clear')
-             show
-        else
-            Menu.new.option
-        end
+    system "clear"
+    puts "End of contacts"
+  end
+
+  def edit_contact(contact)
+    print "Updated name: "
+    name = $stdin.gets.chomp
+    print "Updated phone number: "
+    phone_number = $stdin.gets.chomp
+    print "Updated address: "
+    address = $stdin.gets.chomp
+    print "Updated email: "
+    email = $stdin.gets.chomp
+
+    contact.name = name if !name.empty?
+    contact.phone_number = phone_number if !phone_number.empty?
+    contact.address = address if !address.empty?
+    contact.email = email if !email.empty?
+
+    puts "Updated contact:"
+    puts contact
+  end
+
+  def delete_contact(contact)
+    @address_book.contacts.delete(contact)
+    puts "#{contact.name} has been deleted"
+  end
+
+  def add_contact
+    system "clear"
+    puts "New Contact"
+    print "Name: "
+    name = $stdin.gets.chomp
+    print "Phone number: "
+    phone = $stdin.gets.chomp
+    print "Address: "
+    address = $stdin.gets.chomp
+    print "Email: "
+    email = $stdin.gets.chomp
+
+    @address_book.add_contact(name, phone, address, email)
+
+    system "clear"
+    puts "New contact added"
+  end
+
+  # if Contact.create_table == true
+  #   Contact.create(name:name, phone:phone, address:address, email:email)
+  # else
+  #   Contact.create_table
+  #   Contact.create(name:name, phone:phone, address:address, email:email)
+  # end
+  def find_match(name) 
+    @address_book.search(name)
+  end
+def search_contacts
+    print "Search by name: "
+    name = $stdin.gets.chomp
+    match = find_match(name)
+
+    if match
+      $stdout.print match.to_s 
+      search_submenu(match)
+    else
+      $stdout.print "No match found\n"
+    end
+  end
+def read_csv
+    $stdout.print "Enter CSV file to import: "
+    file_name = $stdin.gets.chomp
+
+    if file_name.empty?
+      system "clear"
+      $stdout.print "No CSV file read"
+      run
     end
 
-
-    def modify_contact
-        display_all_contacts
-        puts "Please, Enter the contact id you want to modify!"
-        modify =  gets.chomp.to_i
-        Contact.all.each do |contactc|
-            if modify == contactc.first
-                
-                puts "Enter the new Name"
-                name = gets.chomp.capitalize
-                until !name.empty? 
-                    name = gets.chomp
-                end
-                
-                puts "Enter the new e-mail"
-                email = gets.chomp.downcase
-                until !email.empty? 
-                    email = gets.chomp
-                end
-               
-                puts "Enter the new phone number"
-                phone_number = gets.chomp.to_i
-                until !phone_number.empty? 
-                    phone_number = gets.chomp.to_i
-                end
-                
-                puts "Enter the new Address" 
-                address = gets.chomp.capitalize
-                until !address.empty? 
-                    address = gets.chomp
-                end
-                
-                ncontact = Contact.new contact_column.first, name, phone_number, address, email
-                ncontact.update
-                system('clear')
-                puts "The contact id #{modify} has been modified!"
-                puts "\nYour new contact is:Name: #{ncontact.name}, Phone: #{ncontact.phone_number}, Address #{ncontact.address}, Email: #{ncontact.email}"
-            end
-        end
-        Menu.new.option
+    begin
+      @address_book.add_from_csv(file_name)
+    rescue
+      $stdout.print "#{file_name} is not a valid CSV file, please enter the name of a valid CSV file"
+      read_csv
     end
+  end
 
-     def alter_phone_number
-        display_all_contacts
-        puts "Enter the id of the contact phone number you want to modidy"
-       input = gets.chomp.to_i
-
-        Contact.all.each do |contact_column|
-            if input == contact_column[0]
-                puts "Enter the new phone number."
-                new_phone_number = gets.chomp.to_i
-                Contact.update_phone_number input, new_phone_number
-                puts "#{contact_column[1]}'s phone Number has been successfully modify!"
-            end
-        end
-        Menu.new.option
-    end
-
-    def alter_email
-        display_all_contacts
-        puts "Enter the id of the contact you want to modify"
-        input = gets.chomp.to_i
-
-        Contact.all.each do |contact_column|
-            if input == contact_column[0]
-                puts "Enter the new email."
-                new_email = gets.chomp
-                Contact.update_email input, new_email
-                puts "#{contact_column[1]}'s email has been successfully modify."
-            end
-        end
-        Menu.new.option
-    end
-
-    def alter_name
-        system('clear')
-        display_all_contacts
-        puts "Enter the id of the contact you want to modify"
-        input = gets.chomp.to_i
-
-        Contact.all.each do |contact_column|
-            if input == contact_column[0]
-                puts "Enter the new name."
-                new_name = gets.chomp
-                puts ""
-                Contact.update_name input, new_name
-                puts "#{contact_column[0]}' name has been modify successfully."
-                sleep(2)
-            end
-        end
-        system('clear')
-        Menu.new.option
-    end
-
-    def alter_address
-        display_all_contacts
-        puts "Enter the id of the contact you want to modidy"
-        input_id = gets.chomp.to_i
-
-        Contact.all.each do |contact_column|
-            if input == contact_column[0]
-                puts "Enter the new address."
-                new_address = gets.chomp
-                Contact.update_phone_number input, new_address
-                puts "#{contact_column[1]}'s address has been successfully modify."
-            end
-        end
-        Menu.new.option
-    end
- 
-    def find_a_contact
-        display_all_contacts
-        puts "\nEnter the name you want to find:"
-        input = gets.chomp
-        fcontact = false
-
-        Contact.all.each do |contact_column|
-           
-            if input_name == contact_column[1]
-                puts "Full Name: #{contact_column[1]}, Phone Number: #{contact_column[2]}, Address: #{contact_column[3]}, Email: #{contact_column[4]}\n"
-                Menu.new.show_option
-                fcontact = true
-            end 
-        end
-        if !fcontact
-            puts "'#{input}' doesn't exist!\n".red
-            sleep(2)
-            find_a_contact
-        end
-    end
-
-    def delete_all_contacts
-        puts "Do you really want to delete all your contacts?\n".upcase
-        input = gets.chomp
-        if input =='y' || input =='yes'
-            Contact.delete_only_data
-            puts "Your contact list is empty!"
-            sleep(2)
-            system('clear')
-            Menu.new.option
-        else
-            Menu.new.option
-        end
-    end
-
-    def exit_contacts
-        puts "Do you really want to exit? yes or no"
-        input = gets.chomp
-        if input == "n" || input == "no"
-            system('clear')
-            Menu.new.option
-        else
-            system('clear')
-            puts "Bye!"
-            exit
-            Run.new.pause_and_clear_screen
-        end 
-    end
-
-    def menuback
-        puts "\nPress '1' to go back to the menu!\n Or '2' to exit program!"
-        input = gets.strip
-        if input == "1"
-              system ('clear')
-            Menu.new.option
-        elsif input == "2"
-            system('clear')
-            exit_contacts
-        else
-            puts "Wrong input".red
-            puts "\nPress '1' to go back to the menu!\n Or '2' to exit program!"
-            return menuback
-        end
-    end
 end
 
- 
