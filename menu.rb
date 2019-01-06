@@ -1,8 +1,12 @@
 
 require_relative 'config/environment'
+
 Contact.create_table
-menu = MenuController.new
+menu = Controllers.new
 system "clear"
-puts "Welcome to my list of contact!".upcase.yellow
+puts "    
+------------------------------
+Welcome to my contacts Library
+------------------------------".upcase.yellow
 menu.run
 # binding.pry

@@ -73,7 +73,7 @@ class Contact
         end
     end
 
-    # displays all contacts in the table contacts in alpha order by
+    # displays all contacts in the table contacts in alpha order by name
     def self.alphabetic_order
       sql = "SELECT * FROM contacts ORDER BY name ASC"
       DB[:conn].execute(sql)
@@ -83,7 +83,7 @@ class Contact
       new(*row)
     end
 
-    def self.find_by_name name
+    def self.find_by_name(name)
       sql = <<-SQL
         SELECT * FROM contacts
         WHERE name LIKE ?
