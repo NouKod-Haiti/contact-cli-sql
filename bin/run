@@ -1,7 +1,4 @@
-#!/usr/bin/env ruby 
-require 'sqlite3'
+ #!/usr/bin/env ruby
 
-require_relative "../lib/address.rb"
-require_relative "../lib/create_contact.rb"
-require_relative "../lib/contact_sql.rb"
-require_relative "../config/environment.rb"
+'../config/environment'
+
