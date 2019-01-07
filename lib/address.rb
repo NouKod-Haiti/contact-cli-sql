@@ -10,7 +10,7 @@ def call
          puts "1- Add new contact"
          puts "2- Display all contacts"
          puts "3- Modify contact"
-         puts "4- Delete contact"
+         puts "4- Delete a contact"
          puts "5- Find a contact"
          puts "6- Exit the program"
          puts ""
@@ -51,19 +51,17 @@ def add_contact
 
         puts "Enter Fullname:"
         name = gets.chomp
-        
+        puts ''
         puts "Enter Address:"
         address = gets.chomp
-        
-
+        puts ''
         puts "Enter E-mail:"
         email = gets.chomp
         until email.end_with?(".com") && email.include?("@") || email.end_with?(".fr") && email.include?("@") || email.end_with?(".ht") && email.include?("@")
             puts "Enter a correct Email"
             email = gets.chomp
         end
-    
-       
+        puts ''
         puts "Enter Phone Number:"
         phone = gets.chomp
         until !phone.empty? && (phone[/\d{11}/])
@@ -72,8 +70,9 @@ def add_contact
         end
             
         
-         Contact.create(name: name, phone: phone, address: address, email: email)       #@address
-       puts "your contact is created with success!"
+         Contact.create(name: name, address: address, phone: phone, email: email)  
+         puts "-------------------------------------"
+         puts "your contact is created with success!"
        puts "-------------------------------------"
     end 
     
@@ -81,9 +80,9 @@ def add_contact
 
 def display_contact	   
         
-    puts "----------------------------------------------------------------------" 
-    puts "|ID |   FULL NAME    |   PHONE NUMBER    |   ADDRESS   |   EMAIL     |"
-    puts "----------------------------------------------------------------------"
+    puts "-------------------------------------------------------------------" 
+    puts "|ID |   FULL NAME    |  PHONE NUMBER  |   ADDRESS   |   EMAIL     |"
+    puts "-------------------------------------------------------------------"
     puts "    "
 
     # table = Terminal::Table.new do |t|
@@ -144,14 +143,16 @@ def delete_contact
                 until !name.empty? 
                     name = gets.chomp
                 end
-                
+                puts ''
+
                 puts "Enter A new Email"
                 email = gets.chomp.downcase
                 until email.end_with?(".com") && email.include?("@") || email.end_with?(".fr") && email.include?("@") || email.end_with?(".ht") && email.include?("@")
                     puts "Enter a corect Email"
                     email = gets.chomp
                 end
-               
+                puts ''
+
                 puts "Enter A New Phone Number"
                 phone = gets.chomp
                 until !phone.empty? && (phone[/\d{11}/])
@@ -159,7 +160,8 @@ def delete_contact
                     phone = gets.chomp
                 end
         
-                
+                puts ''
+
                 puts "Enter A New Address"
                 address = gets.chomp.capitalize
                 until !address.empty? 
@@ -185,11 +187,17 @@ def delete_contact
     def find_a_contact
         puts "\nEnter the name you want to look for:"
         input_name = gets.chomp
+        puts ""
         is_found = false
 
         Contact.all.each do |contact_column|
             if input_name == contact_column[1]
-                puts "Full Name: " + "#{contact_column[1]}" + ", Phone Number: " + "#{contact_column[2]}" + ", Address: " + "#{contact_column[3]}"+ ", Email: " + "#{contact_column[4]}\n\n"
+                puts "---------------------------------------------------------------" 
+                puts "|   FULL NAME    |  PHONE NUMBER  |   ADDRESS   |   EMAIL     |"
+                puts "---------------------------------------------------------------"
+                puts "| #{contact_column[1]} | "+" #{contact_column[2]} | "+"#{contact_column[3]} |" + "#{contact_column[4]}|"
+                puts "---------------------------------------------------------------" 
+                puts ""
                 is_found = true
             end 
         end
@@ -221,7 +229,8 @@ def delete_contact
                 
                  puts "Your contacts has been emptied from the database!"	
                  puts "-----------------------------------"   
-                
+                 run
+                 option
                 end	   
         
         end	   
@@ -230,8 +239,10 @@ def delete_contact
     
                 puts "Are you sure you want to exit? (yes/no)"
                 input = gets.chomp
-                if input == "n" || input == "N"
-                call
+                if input == "no" || input == "No"
+                    run
+                    option
+                    puts ""
                 else
              puts "Good Bye"
              exit(0)
