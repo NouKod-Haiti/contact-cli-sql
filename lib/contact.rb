@@ -57,13 +57,15 @@ class Contact
        end
       end
   
-      #creates new contact and save them
+
       def self.create(name:, phone:, address:, email:)
           new_contact = new(name, phone, address, email)
           new_contact.save
           new_contact
       end
   
+      
+
   
       # displays all contacts in the table contacts
       def self.all

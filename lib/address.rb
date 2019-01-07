@@ -80,10 +80,10 @@ def add_contact
 
 def display_contact	   
         
-    puts "-------------------------------------------------------------------" 
-    puts "|ID |   FULL NAME    |  PHONE NUMBER  |   ADDRESS   |   EMAIL     |"
-    puts "-------------------------------------------------------------------"
-    puts "    "
+    puts "--------------------------------------------------------------------------" 
+    puts "|ID |   FULL NAME    |  PHONE NUMBER  |   ADDRESS   |   EMAIL         |"
+    # puts "-------------------------------------------------------------------"
+    # puts "    "
 
     # table = Terminal::Table.new do |t|
     #     t << ['One', 1]
@@ -96,12 +96,15 @@ def display_contact
       # > puts table
     
  Contact.all.each do |row|
+      puts "------------------------------------------------------------------------"
       puts "| #{row.join " | " } |"
+      puts "------------------------------------------------------------------------"
+
     # row.join
     #     end	   
     #     Terminal::Table.new :title => "Contact list", :headings => ['Full name', 'Address', 'Phone', 'Email'], :rows => table
         
-     puts ""
+    #  puts ""
 end 	   
 end
  	      
@@ -117,7 +120,8 @@ def delete_contact
                 id_found = true
             end
             puts "Contact id #{input} has been deleted!\n"
-            
+            puts "---------------------------------"
+
         end
 
         until id_found == true
@@ -228,7 +232,7 @@ def delete_contact
                  Contact.delete_only_data	   
                 
                  puts "Your contacts has been emptied from the database!"	
-                 puts "-----------------------------------"   
+                 puts "-------------------------------"   
                  run
                  option
                 end	   
