@@ -68,10 +68,12 @@ class Contact
     # displays all contacts in the table contacts
     def self.all
         sql = "SELECT * FROM contacts"
-        DB[:conn].execute(sql)
+        DB[:conn].execute(sql).map do |row|
+          new_from_db row
+        end
     end
 
-    # displays all contacts in the table contacts in alpha order by
+    # displays all contacts in the table contacts in alpha order by name
     def self.alphabetic_order
       sql = "SELECT * FROM contacts ORDER BY name ASC"
       DB[:conn].execute(sql)
@@ -81,13 +83,13 @@ class Contact
       new(*row)
     end
 
-    def self.find_by_name name
+    def self.find_by_name(name)
       sql = <<-SQL
         SELECT * FROM contacts
-        WHERE name = ?
+        WHERE name LIKE ?
       SQL
 
-      DB[:conn].execute(sql,name).map do |row|
+      DB[:conn].execute(sql,name+'%').map do |row|
         new_from_db(row)
       end.first
     end
@@ -121,4 +123,5 @@ class Contact
       sql ="UPDATE contacts SET address = ? WHERE id = ?"
        DB[:conn].execute(sql,address,id)
     end
+    
 end
