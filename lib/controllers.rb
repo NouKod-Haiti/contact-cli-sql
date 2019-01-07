@@ -111,7 +111,8 @@ class Controllers
     puts "    "
     puts "| #{index + 1} | "+" #{contact.name} | "+"  #{contact.phone} | "+"  #{contact.address} | "+"  #{contact.email}"
     puts "----------------------------------------------------------------------"
-      contacts_submenu
+
+    contacts_submenu
     end
 
     system "clear"
@@ -131,39 +132,15 @@ class Controllers
     end	   
   end 
 
-
-# def edit_contact
-#     print "Updated name: "
-#     name = $stdin.gets.chomp
-#     Contact.update_name id, name
-#     print "Updated phone: "
-#     phone = $stdin.gets.chomp
-#     Contact.update_phone id, phone
-#     print "Updated address: "
-#     address = $stdin.gets.chomp
-#     Contact.update_address id, address
-#     print "Updated email: "
-#     email = $stdin.gets.chomp
-#     Contact.update_email id, email
-
-#     # contact.name = name if !name.empty?
-#     # contact.phone = phone if !phone.empty?
-#     # contact.address = address if !address.empty?
-#     # contact.email = email if !email.empty?
-#     Contact.update(name: name, phone: phone, address: address, email: email)
-
-#     puts "Updated contact:"
-#   end
-
 def edit_contact
-    display_all_contacts
-    puts "Enter the contact id you want to modify!"
+    #display_all_contacts
+    puts "Type the contact id to modify it!"
     input =  gets.chomp.to_i
-    Contact.all.each do |contact|
-        if input == contact
+    search = false
+    Contact.all.each_with_index do |contact, index|
+        if input == contact.id
             
           print "Updated name: "
-           name = gets.chomp.capitalize
            name = $stdin.gets.chomp
            until !name.empty?
            puts "Enter a name to continue!".red
@@ -172,7 +149,7 @@ def edit_contact
            name = $stdin.gets.chomp
          end
             
-           print "Updated hone: "
+           print "Updated phone: "
            phone = $stdin.gets.chomp
            until !phone.empty? && (phone[/\d{11}/])
            puts "Enter a phone to continue!".red
@@ -196,15 +173,20 @@ def edit_contact
            print "Email: "
            email = $stdin.gets.chomp
          end
-            
-            newInfo = Contact.new contact, name, phone, address, email
+            #Contact.create(name: name, phone: phone, address: address, email: email)
+            newInfo = Contact.new contact.id, name, phone, address, email
             newInfo.update
-            puts "Contact id #{input} has been modified!\n"
-            puts "\nYour new contact is:\n\Full Name: #{newInfo.name}, Phone: #{newInfo.phone_number}, Address #{newInfo.address}, Email: #{newInfo.email}"
-        end
-    end
-    search_submenu
-end
+            puts "Contact id #{input} has been modified!\n".blue
+            puts "\nThe new contact is:\n\Full Name: #{newInfo.name}, Phone: #{newInfo.phone}, Address #{newInfo.address}, Email: #{newInfo.email}"
+            search = true
+          end
+      end
+      until search == true
+         puts "'#{input}' is not in your contact!\n"
+         edit_contact
+      end
+      
+  end
 
   def delete_all_contact
     puts "Are you sure you want to delete all your contacts? (yes/no)".red
@@ -217,39 +199,28 @@ end
     end  
   end
 
-  def delete_contact 
-    puts "\n Enter the id contact you want to delete!"
-    input = gets.chomp.to_i
-    id_found = false
-    
-    Contact.all.each do |contact|    
-        if contact == input
-            Contact.drop_row input
-        end
-        puts "Contact id #{input} has been deleted!\n"
-        end
+
+def delete_contact 
+        
+  puts "\n Type the id contact to delete it!"
+  input = gets.chomp.to_i
+  search = false
+  
+  Contact.all.each_with_index do |contact, index|     
+      if contact.id == input
+          Contact.drop_row input
+          search = true
+      end
+      puts "Contact id #{input} has been deleted!\n".blue
+      
   end
 
-  # def find_by_name
-  #   system "clear"
-  #   puts""
-  #   puts "Search by name:"
-  #   input = gets.chomp.to_s
-  #   search = false
-  #   Contact.all.each_with_index do |contact, index|
-       
-  #       if input == contact.name
-  #       puts "Contact #{index + 1}".cyan
-  #           search_submenu
-  #           search = true
-  #       end 
-  #   end
-  #   if !search
-  #       puts "'#{input}' is not in your contact list!\n".red
-  #       find_by_name
-  #   end
-  # end
-  # end
+  until search == true
+      puts "'#{input}' is not in your contact!\n"
+     return delete_contact
+   end
+  
+end
 
   def add_contact
     system "clear"
@@ -314,9 +285,9 @@ def find_by_name
           search = true
       end 
   end
-  if !search
+ else#if !search
       puts "'#{input}' is not in your contact list!\n".red
       find_by_name
-  end
+  #end
 end
 end
