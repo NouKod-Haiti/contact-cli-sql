@@ -80,7 +80,7 @@ def add_contact
 
 def display_contact	   
         
-    puts "--------------------------------------------------------------------------" 
+    puts "----------------------------------------------------------------------" 
     puts "|ID |   FULL NAME    |  PHONE NUMBER  |   ADDRESS   |   EMAIL         |"
     # puts "-------------------------------------------------------------------"
     # puts "    "
@@ -104,7 +104,7 @@ def display_contact
     #     end	   
     #     Terminal::Table.new :title => "Contact list", :headings => ['Full name', 'Address', 'Phone', 'Email'], :rows => table
         
-    #  puts ""
+     puts ""
 end 	   
 end
  	      
@@ -174,8 +174,16 @@ def delete_contact
                 
                 input = Contact.new column.first, name, phone, address, email
                 input.update
-                puts "Contact id #{id} has been modified!\nBelow is your modified contact:1"
-                puts "\nYour new contact is:\n\Full Name: " +"#{input.name}" + ", Phone: " + "#{input.phone}" + ", Address: " + "#{input.address}" + ", Email: " +"#{input.email}"
+                puts ""
+
+                puts "Contact id #{id} has been modified!"
+                puts "--------------------------------------------------------------------------" 
+                puts "|   FULL NAME    |  PHONE NUMBER  |   ADDRESS   |   EMAIL         |"
+                puts "--------------------------------------------------------------------------"
+                puts "| #{input.name} "+"   | #{input.phone} |  "+"#{input.address}   | "+" #{input.email}|"
+                puts "--------------------------------------------------------------------------"
+                puts ""
+
                 id_exist = true
             end
         end

@@ -148,7 +148,7 @@ end
 
 
 
-# 
+
 describe ".create_table" do
     it 'creates the contacts table in the database' do
       DB[:conn].execute("DROP TABLE IF EXISTS contacts")
